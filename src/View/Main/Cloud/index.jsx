@@ -9,7 +9,7 @@ const Cloud = () => {
                 <meshLambertMaterial color="#353535" />
             </mesh>
             <Postpro />
-            <Cookie distance={100} intensity={5} angle={0.6} penumbra={1} position={[2, 5, 0]} />
+            <Cookie distance={100} intensity={7} angle={0.6} penumbra={1} position={[2, 5, 0]} />
         </>
     )
 }

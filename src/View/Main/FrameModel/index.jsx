@@ -4,7 +4,7 @@ import { TextureLoader } from 'three';
 import { useLoader, useThree } from '@react-three/fiber';
 
 import TextureFrame from '../../../assets/image/frame-texture.jpg'
-
+import PhotoImg from '../../../assets/image/photo.jpg'
 
 export const extrudeSettings = (value) => {
   const setting = {
@@ -34,8 +34,6 @@ export const extrudeBevelSettings = (value) => {
 const FrameModel = () => {
   const { gl } = useThree();
 
-  const Photo_1 = 'https://lamaco-medusa.s3.eu-west-3.amazonaws.com/original-3b0268bb-8362-4f2e-b5e2-6fae88d30321.jpg';
-
   const borderTexture = useLoader(TextureLoader, TextureFrame);
   borderTexture.anisotropy = Math.min(gl.capabilities.getMaxAnisotropy(50));
   borderTexture.wrapS = borderTexture.wrapT = THREE.RepeatWrapping;
@@ -43,7 +41,14 @@ const FrameModel = () => {
   borderTexture.offset.x = 0.5
   borderTexture.offset.y = 0.5
 
-  const photoTexture = useLoader(TextureLoader, Photo_1)
+  const middleBorderTexture = borderTexture?.clone()
+  middleBorderTexture.anisotropy = Math.min(gl.capabilities.getMaxAnisotropy(50));
+  middleBorderTexture.wrapS = middleBorderTexture.wrapT = THREE.RepeatWrapping;
+  middleBorderTexture.repeat.set(11, 11)
+  middleBorderTexture.offset.x = 0.5
+  middleBorderTexture.offset.y = 0.5
+
+  const photoTexture = useLoader(TextureLoader, PhotoImg)
   photoTexture.anisotropy = Math.min(gl.capabilities.getMaxAnisotropy(50));
   photoTexture.wrapS = photoTexture.wrapT = THREE.RepeatWrapping;
   photoTexture.repeat.set(0.025, 0.035)
@@ -121,34 +126,30 @@ const FrameModel = () => {
     <group castShadow receiveShadow name='model' rotation={[-Math.PI / 2, 0, 0]} scale={0.075}>
       <mesh castShadow receiveShadow name='photo-section'>
         <extrudeGeometry args={[photoSectionModel(), extrudeSettings(photoSectionThickness)]} />
-        <meshPhongMaterial map={photoTexture} color={'grey'} />
+        <meshPhongMaterial map={photoTexture} color={'#999'} />
       </mesh>
 
       <mesh receiveShadow name='middle-frame'>
         <extrudeGeometry args={[middleFrameModel(), extrudeSettings(middleFrameThickness)]} />
-        <meshPhongMaterial color={'#775726'} side={THREE.DoubleSide}/>
-      </mesh>
-      <mesh position={[0, 0, -0.1]} receiveShadow name='middle-frame'>
-        <boxGeometry args={[middleFrameW, middleFrameH, 0.1]} />
-        <meshPhongMaterial color={'brown'} side={THREE.DoubleSide}/>
+        <meshPhongMaterial map={middleBorderTexture} bumpMap={middleBorderTexture} bumpScale={0.01} specular="#664C29" color={'#333'} side={THREE.DoubleSide}/>
       </mesh>
 
       <group castShadow name='out-frame'>
         <mesh castShadow name='top' position={[0, middleFrameH / 2 + 0.12, outFrameBorder + 0.14]} rotation={[Math.PI, 0, 0]}>
           <extrudeGeometry args={[outFrameShortModel(), extrudeBevelSettings(outFrameThickness)]} />
-          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#A07B4B' side={THREE.DoubleSide} roughness={0.5}/>
+          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#333' side={THREE.DoubleSide} roughness={0.5}/>
         </mesh>
         <mesh castShadow name='bottom' position={[0, -middleFrameH / 2 - 0.12, 0]}>
           <extrudeGeometry args={[outFrameShortModel(), extrudeBevelSettings(outFrameThickness)]} />
-          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#A07B4B' side={THREE.DoubleSide} roughness={0.5}/>
+          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#333' side={THREE.DoubleSide} roughness={0.5}/>
         </mesh>
         <mesh castShadow name='left' position={[-middleFrameW / 2 - 0.12, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
           <extrudeGeometry args={[outFrameLargeModel(), extrudeBevelSettings(outFrameThickness)]} />
-          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#A07B4B' side={THREE.DoubleSide} roughness={0.5}/>
+          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#333' side={THREE.DoubleSide} roughness={0.5}/>
         </mesh>
         <mesh castShadow name='right' position={[middleFrameW / 2 + 0.12, 0, outFrameBorder + 0.14]} rotation={[0, Math.PI, -Math.PI / 2]}>
           <extrudeGeometry args={[outFrameLargeModel(), extrudeBevelSettings(outFrameThickness)]} />
-          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#A07B4B' side={THREE.DoubleSide} roughness={0.5}/>
+          <meshPhongMaterial map={borderTexture} bumpMap={borderTexture} bumpScale={0.01} specular="#664C29" color='#333' side={THREE.DoubleSide} roughness={0.5}/>
         </mesh>
       </group>
     </group>
