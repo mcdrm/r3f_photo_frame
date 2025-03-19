@@ -1,26 +1,19 @@
 import React from 'react';
-import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 
 import FrameModel from './FrameModel';
 import CanvasEnv from './CanvasEnv';
+import Cloud from './Cloud';
 
 const Main = () => {
 
   return (
-    <Canvas
-      camera={{
-        aspect: window.innerWidth / window.innerHeight,
-        fov: 45,
-        near: 0.01,
-        far: 10000,
-      }}
-      shadows
-    >
-      <OrbitControls />
-      <FrameModel />
-      <CanvasEnv />
-    </Canvas>
+      <Canvas gl={{ antialias: false }} flat shadows camera={{ position: [3, 0, 5], fov: 35 }}>
+          <FrameModel />
+          <Cloud />
+          <CanvasEnv />
+      </Canvas>
   )
 }
 

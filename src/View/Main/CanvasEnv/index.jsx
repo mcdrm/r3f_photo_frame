@@ -1,23 +1,19 @@
-import { Environment, useHelper } from '@react-three/drei';
+import { AccumulativeShadows, Environment, OrbitControls, RandomizedLight } from '@react-three/drei';
 import React, { useRef } from 'react'
-import { CameraHelper } from 'three';
 
 const CanvasEnv = () => {
   const camera = useRef();
-  // useHelper(camera, CameraHelper);
 
   return (
     <group>
-      <Environment preset='dawn' background blur={1} />
-      <directionalLight castShadow intensity={5} position={[-20, 50, -50]} shadow-mapSize={[2048, 2048]}>
-        <orthographicCamera ref={camera} attach="shadow-camera" args={[-30, 30, 30, -30]} />
-      </directionalLight>
-
-      <directionalLight position={[-50, 100, -50]} intensity={0.5} />
-      <ambientLight intensity={1.5} />
-
-      {/* <axesHelper args={[50, 50]} position={[0, 1.3, 0]}/> */}
-      {/* <gridHelper args={[150, 150]} position={[0, 1.2, 0]} /> */}
+      <color attach="background" args={['#353535']} />
+      <fog attach="fog" args={['#353535', 5, 20]} />
+      <ambientLight intensity={2} />
+      <AccumulativeShadows receiveShadow temporal frames={100} opacity={0.8} alphaTest={0.9} scale={12} position={[0, -0.5, 0]}>
+        <RandomizedLight radius={4} ambient={0.5} position={[5, 8, -10]} bias={0.001} />
+      </AccumulativeShadows>
+      <Environment preset="city" />
+      <OrbitControls autoRotate autoRotateSpeed={0.1} enableZoom={false} minPolarAngle={0} maxPolarAngle={Math.PI / 3} />
     </group>
   )
 }
